@@ -19,6 +19,25 @@ import (
 
 const IO_BUF_SIZE = (2 * 1024 * 1024)
 
+const deBruijn32 = 0x04653adf
+
+var deBruijnIdx32 = [32]byte{
+	0, 1, 2, 6, 3, 11, 7, 16,
+	4, 14, 12, 21, 8, 23, 17, 26,
+	31, 5, 10, 15, 13, 20, 22, 25,
+	30, 9, 19, 24, 29, 18, 28, 27,
+}
+
+// Ctz32 counts trailing (low-order) zeroes,
+// and if all are zero, then 32.
+func Ctz32(x uint32) int {
+	x &= -x                      // isolate low-order bit
+	y := x * deBruijn32 >> 27    // extract part of deBruijn sequence
+	i := int(deBruijnIdx32[y])   // convert to bit index
+	z := int((x - 1) >> 26 & 32) // adjustment if zero
+	return i + z
+}
+
 // New return the new Qcow.
 func New(config *Opts) *QCow2 {
 	return &QCow2{}

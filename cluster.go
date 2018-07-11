@@ -9,7 +9,7 @@ package qcow2
 import (
 	"syscall"
 
-	"github.com/zchee/go-qcow2/internal/mem"
+	"github.com/gwydirsam/go-qcow2/mem"
 )
 
 const DEBUG_ALLOC2 = false
